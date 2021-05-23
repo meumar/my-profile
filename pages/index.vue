@@ -1,55 +1,67 @@
 <template>
   <div class="container">
-    <div>
-      <Logo />
-      <h1 class="title">
-        My Profile
-      </h1>
-    </div>
+    <el-card class="box-card" v-for="user in allUsers" :key="user.id">
+      <template #header>
+        <div class="card-header">
+          {{user.id}}<span>Name: {{user.name}}</span>
+          <p>
+            ({{user.username}})
+        </p>
+        </div>
+      </template>
+      <p>Address:</p>
+      <div v-for="(ad, index) in user.address" :key="index">
+        <p>{{ad}}</p>
+        </div>
+    </el-card>
   </div>
 </template>
 
 <script>
-export default {}
+import { mapGetters } from "vuex";
+export default {
+  data() {
+    return {
+      allUsers: []
+    };
+  },
+  created() {
+    this.loadUSers();
+  },
+  computed: {
+    ...mapGetters("users", ["getUsers"])
+  },
+  methods: {
+    async loadUSers() {
+      await this.$store.dispatch("users/fetchusers");
+      this.allUsers = [...this.getUsers];
+    },
+    async mounted() {}
+  }
+};
 </script>
 
 <style>
-.container {
-  margin: 0 auto;
-  min-height: 100vh;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  text-align: center;
-}
+.card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+  }
+  .item {
+    margin-bottom: 18px;
+  }
 
-.title {
-  font-family:
-    'Quicksand',
-    'Source Sans Pro',
-    -apple-system,
-    BlinkMacSystemFont,
-    'Segoe UI',
-    Roboto,
-    'Helvetica Neue',
-    Arial,
-    sans-serif;
+  .box-card {
+    width: 480px;
+  }
+
+.text {
+  font-family: "Quicksand", "Source Sans Pro", -apple-system, BlinkMacSystemFont,
+    "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
   display: block;
   font-weight: 300;
-  font-size: 100px;
+  font-size: 20px;
   color: #35495e;
   letter-spacing: 1px;
-}
-
-.subtitle {
-  font-weight: 300;
-  font-size: 42px;
-  color: #526488;
-  word-spacing: 5px;
-  padding-bottom: 15px;
-}
-
-.links {
-  padding-top: 15px;
 }
 </style>
